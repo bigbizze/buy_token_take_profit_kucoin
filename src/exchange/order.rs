@@ -28,11 +28,6 @@ impl std::fmt::Display for OrderSide {
     }
 }
 
-// pub enum OrderStatus {
-//     Bought,
-//     Sold
-// }
-
 #[derive(Clone)]
 pub struct Order {
     pub order_id: String,
@@ -40,8 +35,6 @@ pub struct Order {
     pub side: Option<OrderSide>,
     pub health: i8,
     pub alive: bool,
-    // pub order_status: OrderStatus,
-    // pub quantity: f64
 }
 
 impl Order {
