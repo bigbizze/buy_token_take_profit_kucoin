@@ -35,7 +35,7 @@ impl User {
             take_profit_perc: String::from(dotenv!("TAKE_PROFIT_PERC"))
                 .parse::<f64>()
                 .expect("Got bad value for TAKE_PROFIT_PERC!"),
-            balance_perc: String::from(dotenv!("TAKE_PROFIT_PERC"))
+            balance_perc: String::from(dotenv!("BALANCE_PERC"))
                 .parse::<f64>()
                 .expect("Got bad value for BALANCE_PERC!"),
         }
