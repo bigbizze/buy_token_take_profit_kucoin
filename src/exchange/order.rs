@@ -1,7 +1,7 @@
 #[derive(Clone)]
 pub enum OrderKind {
     Market,
-    Limit
+    Limit,
 }
 
 impl std::fmt::Display for OrderKind {
@@ -16,7 +16,7 @@ impl std::fmt::Display for OrderKind {
 #[derive(Clone)]
 pub enum OrderSide {
     Buy,
-    Sell
+    Sell,
 }
 
 impl std::fmt::Display for OrderSide {
@@ -39,7 +39,7 @@ pub struct Order {
     pub kind: Option<OrderKind>,
     pub side: Option<OrderSide>,
     pub health: i8,
-    pub alive: bool
+    pub alive: bool,
     // pub order_status: OrderStatus,
     // pub quantity: f64
 }

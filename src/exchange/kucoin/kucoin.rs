@@ -1,19 +1,21 @@
-use anyhow::{Result, Context};
 use std::collections::HashMap;
-use kucoin_rs::kucoin::client::{Kucoin, KucoinEnv, Credentials};
-use crate::exchange::kucoin::exchange_info::{KucoinPrecisionInfo, get_exchange_info_kc};
-use crate::error::error::MintError;
-use crate::utils::time::{get_ms_str};
-use kucoin_rs::kucoin::model::user::AccountType;
-use kucoin_rs::kucoin::model::trade::OrderInfo;
+
+use anyhow::{Context, Result};
+use kucoin_rs::kucoin::client::{Credentials, Kucoin, KucoinEnv};
 use kucoin_rs::kucoin::model::APIDatum;
+use kucoin_rs::kucoin::model::trade::OrderInfo;
+use kucoin_rs::kucoin::model::user::AccountType;
+
+use crate::error::error::MintError;
 use crate::exchange::an_exchange::AnExchange;
 use crate::exchange::api_credentials::ApiCredentials;
+use crate::exchange::kucoin::exchange_info::{get_exchange_info_kc, KucoinPrecisionInfo};
 use crate::exchange::order::*;
+use crate::utils::time::get_ms_str;
 
 pub struct KucoinExchange {
     pub account: Kucoin,
-    pub exchange_info: HashMap<String, KucoinPrecisionInfo>
+    pub exchange_info: HashMap<String, KucoinPrecisionInfo>,
 }
 
 const DENOMINATION: &'static str = "USDT";
@@ -53,7 +55,7 @@ impl AnExchange for KucoinExchange {
         };
         KucoinExchange {
             account,
-            exchange_info
+            exchange_info,
         }
     }
 
@@ -79,7 +81,7 @@ impl AnExchange for KucoinExchange {
             side_text,
             &*price.into().to_string(),
             &*quantity.into().to_string(),
-            None
+            None,
         ).await.map_err(|e| MintError::from_kucoin_err(e.into()))
             .context(format!("Failed to create Kucoin limit {} order!", &side))?;
         let order_id = KucoinExchange::unwrap_data(order_res)?.order_id;
@@ -88,7 +90,7 @@ impl AnExchange for KucoinExchange {
             kind: Some(kind),
             side: Some(side),
             health: 0,
-            alive: true
+            alive: true,
         })
     }
 
@@ -109,7 +111,7 @@ impl AnExchange for KucoinExchange {
             side_text,
             None,
             Some(quantity.into() as f32),
-            None
+            None,
         ).await.map_err(|e| MintError::from_kucoin_err(e.into()))
             .context(format!("Failed to create Kucoin limit {} order!", &side))?;
         let order_id = KucoinExchange::unwrap_data(order_res)?.order_id;
@@ -118,7 +120,7 @@ impl AnExchange for KucoinExchange {
             kind: Some(kind),
             side: Some(side),
             health: 0,
-            alive: true
+            alive: true,
         })
     }
 

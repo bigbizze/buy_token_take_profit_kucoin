@@ -1,7 +1,5 @@
-
-
+use crate::exchange::api_credentials::load_api_credentials;
 use crate::user::user::User;
-use crate::exchange::api_credentials::{load_api_credentials};
 
 pub struct UserManager {
     users: Vec<User>

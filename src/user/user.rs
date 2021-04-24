@@ -1,8 +1,11 @@
-use crate::exchange::kucoin::kucoin::KucoinExchange;
-use crate::exchange::api_credentials::ApiCredentials;
+use anyhow::Result;
+use dotenv::dotenv;
+use dotenv_codegen::dotenv;
+
 use crate::exchange::an_exchange::AnExchange;
-use anyhow::{Result};
-use crate::exchange::order::{OrderSide, Order};
+use crate::exchange::api_credentials::ApiCredentials;
+use crate::exchange::kucoin::kucoin::KucoinExchange;
+use crate::exchange::order::{Order, OrderSide};
 
 pub struct User {
     alive: bool,
@@ -11,13 +14,16 @@ pub struct User {
     exchange: KucoinExchange,
     balance: f64,
     active_orders: Vec<Order>,
-    all_sold: bool
+    all_sold: bool,
+    take_profit_perc: f64,
+    balance_perc: f64,
 }
 
 impl User {
     pub async fn new(api_credentials: ApiCredentials) -> Self {
         let mut exchange = KucoinExchange::new(api_credentials.clone()).await;
         let balance = exchange.get_balance().await.expect(&*format!("Could not get balance for {} on startup!", &api_credentials.name));
+        dotenv().ok();
         User {
             alive: true,
             health: 10,
@@ -25,11 +31,17 @@ impl User {
             exchange,
             balance,
             active_orders: Vec::new(),
-            all_sold: false
+            all_sold: false,
+            take_profit_perc: String::from(dotenv!("TAKE_PROFIT_PERC"))
+                .parse::<f64>()
+                .expect("Got bad value for TAKE_PROFIT_PERC!"),
+            balance_perc: String::from(dotenv!("TAKE_PROFIT_PERC"))
+                .parse::<f64>()
+                .expect("Got bad value for BALANCE_PERC!"),
         }
     }
     fn remove_dead(&mut self) {
-        self.active_orders = self.active_orders.clone().into_iter().filter(|order| order.alive ).collect();
+        self.active_orders = self.active_orders.clone().into_iter().filter(|order| order.alive).collect();
     }
     async fn refresh_exchange_connection(&mut self) {
         self.exchange = KucoinExchange::new(self.api_credentials.clone()).await
@@ -37,7 +49,7 @@ impl User {
     async fn refresh_balance(&mut self) -> Result<()> {
         Ok(self.balance = self.exchange.get_balance().await?)
     }
-    pub async fn _refresh(&mut self) -> Result<()>  {
+    pub async fn _refresh(&mut self) -> Result<()> {
         self.refresh_exchange_connection().await;
         self.refresh_balance().await?;
         self.remove_dead();
@@ -48,7 +60,7 @@ impl User {
             Err(e) => {
                 println!("{}", e);
                 self.lower_health(1);
-            },
+            }
             _ => {}
         }
     }
@@ -72,8 +84,8 @@ impl User {
         }
         match self.exchange.market_order(
             symbol.into(),
-            self.balance,
-            OrderSide::Buy
+            self.balance * self.balance_perc,
+            OrderSide::Buy,
         ).await {
             Ok(order) => {
                 let num_orders = self.active_orders.len();
@@ -105,7 +117,7 @@ impl User {
                     continue;
                 }
             };
-            match self.exchange.limit_order(&symbol, quantity, price, OrderSide::Sell).await {
+            match self.exchange.limit_order(&symbol, quantity, price + (price * self.take_profit_perc), OrderSide::Sell).await {
                 Ok(_) => {
                     order.alive = false;
                 }

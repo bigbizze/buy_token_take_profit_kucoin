@@ -1,13 +1,11 @@
 use std::collections::HashMap;
 use std::fmt::Formatter;
 
+use anyhow::{Context, Result};
 use kucoin_rs::kucoin::client::{Kucoin, KucoinEnv};
 use kucoin_rs::kucoin::model::market::SymbolList;
-use anyhow::{Result, Context};
-
 
 use crate::error::error::MintError;
-
 
 #[derive(Debug, Clone)]
 pub struct KucoinPrecisionInfo {

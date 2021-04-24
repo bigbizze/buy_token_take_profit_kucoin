@@ -1,7 +1,7 @@
-use anyhow::{ Result };
+use anyhow::Result;
 
 use crate::exchange::api_credentials::ApiCredentials;
-use crate::exchange::order::{OrderSide, Order};
+use crate::exchange::order::{Order, OrderSide};
 
 #[async_trait::async_trait]
 pub trait AnExchange {

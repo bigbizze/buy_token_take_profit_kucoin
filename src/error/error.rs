@@ -1,9 +1,7 @@
-use crate::error::error::other_err::{MiscError, KucoinApiError, KucoinClientError, KucoinErrorKind};
-
+use crate::error::error::other_err::{KucoinApiError, KucoinClientError, KucoinErrorKind, MiscError};
 
 pub mod other_err {
     use kucoin_rs::kucoin::error::APIError;
-
 
     #[derive(thiserror::Error, Debug)]
     #[error("{:?}", msg)]
@@ -47,6 +45,7 @@ pub mod other_err {
             KucoinApiError { e }
         }
     }
+
     #[derive(Debug)]
     pub struct KucoinClientError {
         e: kucoin_rs::failure::Error
@@ -68,7 +67,7 @@ pub mod other_err {
 
     pub enum KucoinErrorKind {
         Api(APIError),
-        Client(kucoin_rs::failure::Error)
+        Client(kucoin_rs::failure::Error),
     }
 
     impl Into<KucoinErrorKind> for APIError {
@@ -108,7 +107,7 @@ pub enum MintError {
     Other(#[from] MiscError),
 
     #[error(transparent)]
-    SystemTimeError(#[from] std::time::SystemTimeError)
+    SystemTimeError(#[from] std::time::SystemTimeError),
 }
 
 impl MintError {

@@ -1,6 +1,6 @@
-use serde::{Serialize, Deserialize};
-
 use std::fs;
+
+use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Clone)]
 pub struct ApiCredentials {

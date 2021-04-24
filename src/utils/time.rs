@@ -1,5 +1,6 @@
 use std::time::{SystemTime, UNIX_EPOCH};
-use anyhow::{ Result };
+
+use anyhow::Result;
 
 pub fn get_ms() -> Result<u128> {
     let start = SystemTime::now();

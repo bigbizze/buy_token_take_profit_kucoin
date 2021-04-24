@@ -1,15 +1,12 @@
-use tide::{Request, Response, StatusCode};
-
-
-use tide::utils::After;
-
-
 use std::sync::Arc;
-use serde::{Serialize, Deserialize};
-use serde_json;
+
+use anyhow::Result;
 use dotenv::dotenv;
 use dotenv_codegen::dotenv;
-use anyhow::{ Result };
+use serde::{Deserialize, Serialize};
+use serde_json;
+use tide::{Request, Response, StatusCode};
+use tide::utils::After;
 
 #[derive(Serialize, Deserialize)]
 pub struct ArbitrageRequest {

@@ -1,7 +1,9 @@
 use std::sync::Arc;
+
 use tokio::sync::Mutex;
-use crate::user::user_manager::UserManager;
+
 use crate::http_server::http_server::tide_server;
+use crate::user::user_manager::UserManager;
 
 mod http_server;
 mod exchange;
