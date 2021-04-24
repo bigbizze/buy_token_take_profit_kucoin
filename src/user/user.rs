@@ -105,6 +105,9 @@ impl User {
         let symbol = symbol.into();
         let mut acc_errors: i8 = 0;
         for order in &mut self.active_orders {
+            if !order.alive {
+                continue;
+            }
             let (price, quantity) = match self.exchange.get_price_and_quantity_of_order(&order.order_id).await {
                 Ok(t) => t,
                 Err(e) => {
