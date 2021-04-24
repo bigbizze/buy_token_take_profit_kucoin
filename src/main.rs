@@ -20,11 +20,8 @@ async fn main() {
     let (send_token_s, mut token) = tokio::sync::mpsc::channel::<Vec<String>>(24);
     tokio::spawn(async move {
         loop {
-            tokio::time::sleep(tokio::time::Duration::from_secs(600)).await;
-            {
-                let mut um = user_manager_ref1.lock().await;
-                um.refresh_users().await;
-            }
+            let mut um = user_manager_ref1.lock().await;
+            um.refresh_users().await;
         }
     });
     tokio::spawn(async move {
