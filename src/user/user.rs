@@ -72,7 +72,7 @@ impl User {
             return;
         }
         match self.exchange.market_order(
-            symbol.into(),
+            symbol,
             self.balance * self.balance_perc,
             OrderSide::Buy,
         ).await {
