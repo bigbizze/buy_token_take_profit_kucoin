@@ -17,7 +17,7 @@ async fn main() {
     let user_manager = Arc::new(Mutex::new(UserManager::new().await));
     let user_manager_ref1 = Arc::clone(&user_manager);
     let user_manager_ref2 = Arc::clone(&user_manager);
-    let (send_token_s, mut token) = tokio::sync::mpsc::channel::<Vec<String>>(200);
+    let (send_token_s, mut token) = tokio::sync::mpsc::channel::<Vec<String>>(24);
     tokio::spawn(async move {
         loop {
             tokio::time::sleep(tokio::time::Duration::from_secs(600)).await;
