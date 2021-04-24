@@ -1,0 +1,24 @@
+[package]
+name = "kucoin_arb"
+version = "0.1.0"
+authors = ["Charles Anderson <hpcngmoh@gmail.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+tide = "0.16.0"
+serde = { version = "1.0.118", features = ["derive"] }
+async-std = { version = "1.8.0", features = ["attributes"] }
+tokio = { version = "1.0", features = ["macros", "rt-multi-thread", "sync", "net", "mio"] }
+kucoin_rs = "0.3.0"
+dotenv = "0.15.0"
+dotenv_codegen = "0.15.0"
+libmath = "0.2.1"
+#serde_derive = "1.0.125"
+anyhow = "1.0"
+thiserror = "1.0"
+serde_json = "1.0.64"
+http-types = "2.10.0"
+async-trait = "0.1.45"
+futures = "0.3.13"
