@@ -89,7 +89,7 @@ impl AnExchange for KucoinExchange {
             order_id: String::from(order_id),
             kind: Some(kind),
             side: Some(side),
-            health: 0,
+            health: 5,
             alive: true,
         })
     }
@@ -119,7 +119,7 @@ impl AnExchange for KucoinExchange {
             order_id: String::from(order_id),
             kind: Some(kind),
             side: Some(side),
-            health: 0,
+            health: 5,
             alive: true,
         })
     }
