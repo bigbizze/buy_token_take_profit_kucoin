@@ -1,5 +1,5 @@
 [package]
-name = "kucoin_arb"
+name = "buy_token_take_profit_kucoin"
 version = "0.1.0"
 authors = ["Charles Anderson <hpcngmoh@gmail.com>"]
 edition = "2018"

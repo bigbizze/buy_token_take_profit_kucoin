@@ -429,6 +429,26 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "63396b8a4b9de3f4fdfb320ab6080762242f66a8ef174c49d8e19b674db4cdbe"
 
 [[package]]
+name = "buy_token_take_profit_kucoin"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "async-std",
+ "async-trait",
+ "dotenv",
+ "dotenv_codegen",
+ "futures",
+ "http-types",
+ "kucoin_rs",
+ "libmath",
+ "serde",
+ "serde_json",
+ "thiserror",
+ "tide",
+ "tokio",
+]
+
+[[package]]
 name = "byte-pool"
 version = "0.2.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1249,26 +1269,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2d99f9e3e84b8f67f846ef5b4cbbc3b1c29f6c759fcbce6f01aa0e73d932a24c"
 dependencies = [
  "wasm-bindgen",
-]
-
-[[package]]
-name = "kucoin_arb"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "async-std",
- "async-trait",
- "dotenv",
- "dotenv_codegen",
- "futures",
- "http-types",
- "kucoin_rs",
- "libmath",
- "serde",
- "serde_json",
- "thiserror",
- "tide",
- "tokio",
 ]
 
 [[package]]

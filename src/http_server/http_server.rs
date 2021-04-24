@@ -9,14 +9,13 @@ use tide::{Request, Response, StatusCode};
 use tide::utils::After;
 
 #[derive(Serialize, Deserialize)]
-pub struct ArbitrageRequest {
+pub struct PurchaseAndTakeProfitReq {
     tokens: Vec<String>
 }
 
 #[derive(Clone)]
 struct State {
     pub send_token_s: Arc<tokio::sync::mpsc::Sender<Vec<String>>>
-    // pub user_manager: AM<UserManager>
 }
 
 const UPSET_SMILEY: &str = ":(";
@@ -27,9 +26,9 @@ fn http_ok() -> tide::Result {
     )
 }
 
-async fn post_arbitrage(mut req: Request<State>) -> tide::Result {
+async fn post_purchase_and_take_profit(mut req: Request<State>) -> tide::Result {
     let body_string = req.body_string().await?;
-    let message = match serde_json::from_str::<ArbitrageRequest>(&*body_string) {
+    let message = match serde_json::from_str::<PurchaseAndTakeProfitReq>(&*body_string) {
         Ok(t) => tide::Result::Ok(t),
         Err(e) => {
             println!("{}", e);
@@ -46,12 +45,7 @@ async fn post_arbitrage(mut req: Request<State>) -> tide::Result {
     }
 }
 
-pub async fn tide_server(
-    send_token_s: tokio::sync::mpsc::Sender<Vec<String>>
-    // user_manager: AM<UserManager>
-) -> Result<()> {
-    /** We are passing a handle to the main thread's tokio futures
-        runtime because tide_rs implements futures with async-std instead. */
+pub async fn tide_server(send_token_s: tokio::sync::mpsc::Sender<Vec<String>>) -> Result<()> {
     let mut app = tide::with_state(State {
         send_token_s: Arc::new(send_token_s)
     });
@@ -68,7 +62,7 @@ pub async fn tide_server(
     dotenv().ok();
     let port = dotenv!("PORT");
 
-    app.at("/arbitrage").post(post_arbitrage);
+    app.at("/create_order").post(post_purchase_and_take_profit);
     let _ = app.listen(format!("0.0.0.0:{}", port)).await?;
     Ok(())
 }
