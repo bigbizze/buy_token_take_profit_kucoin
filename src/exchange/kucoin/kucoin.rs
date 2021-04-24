@@ -86,6 +86,7 @@ impl AnExchange for KucoinExchange {
             .context(format!("Failed to create Kucoin limit {} order!", &side))?;
         let order_id = KucoinExchange::unwrap_data(order_res)?.order_id;
         Ok(Order {
+            symbol: symbol.clone(),
             order_id: String::from(order_id),
             kind: Some(kind),
             side: Some(side),
@@ -116,6 +117,7 @@ impl AnExchange for KucoinExchange {
             .context(format!("Failed to create Kucoin limit {} order!", &side))?;
         let order_id = KucoinExchange::unwrap_data(order_res)?.order_id;
         Ok(Order {
+            symbol: symbol.clone(),
             order_id: String::from(order_id),
             kind: Some(kind),
             side: Some(side),

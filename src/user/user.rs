@@ -14,7 +14,6 @@ pub struct User {
     exchange: KucoinExchange,
     balance: f64,
     active_orders: Vec<Order>,
-    all_sold: bool,
     take_profit_perc: f64,
     balance_perc: f64,
 }
@@ -31,7 +30,6 @@ impl User {
             exchange,
             balance,
             active_orders: Vec::new(),
-            all_sold: false,
             take_profit_perc: String::from(dotenv!("TAKE_PROFIT_PERC"))
                 .parse::<f64>()
                 .expect("Got bad value for TAKE_PROFIT_PERC!"),
@@ -66,11 +64,6 @@ impl User {
             self.alive = false;
         }
     }
-    pub async fn buy_tokens(&mut self, symbols: Vec<String>) {
-        for symbol in symbols {
-            self.buy_token(symbol).await;
-        }
-    }
     async fn buy_token<S>(&mut self, symbol: S)
         where S: Into<String> + Send
     {
@@ -93,25 +86,26 @@ impl User {
             }
         }
     }
-    pub async fn try_place_sell_limit(&mut self, symbols: &Vec<String>) -> bool {
+    pub async fn buy_tokens(&mut self, symbols: Vec<String>) {
         for symbol in symbols {
-            self.try_place_one_sell_limit(symbol).await;
+            self.buy_token(symbol).await;
         }
-        self.all_sold || !self.alive
     }
-    async fn try_place_one_sell_limit<S>(&mut self, symbol: S)
+    async fn try_place_one_sell_limit<S>(&mut self, symbol: S) -> bool
         where S: Into<String> + Send
     {
         let symbol = symbol.into();
         let mut acc_errors: i8 = 0;
+        let mut all_orders_finished = true;
         for order in &mut self.active_orders {
-            if !order.alive {
+            if !order.alive || order.symbol != symbol {
                 continue;
             }
             let (price, quantity) = match self.exchange.get_price_and_quantity_of_order(&order.order_id).await {
                 Ok(t) => t,
                 Err(e) => {
                     println!("{}", e);
+                    all_orders_finished = false;
                     order.lower_health();
                     continue;
                 }
@@ -122,14 +116,23 @@ impl User {
                 }
                 Err(e) => {
                     println!("{}", e);
+                    all_orders_finished = false;
                     acc_errors += 1;
                 }
             }
         }
         if acc_errors > 0 {
             self.lower_health(acc_errors);
-        } else {
-            self.all_sold = true;
         }
+        all_orders_finished
+    }
+    pub async fn try_place_sell_limit(&mut self, symbols: &Vec<String>) -> bool {
+        let mut all_finished = true;
+        for symbol in symbols {
+            if !self.try_place_one_sell_limit(symbol).await {
+                all_finished = false;
+            }
+        }
+        all_finished || !self.alive
     }
 }

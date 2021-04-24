@@ -30,6 +30,7 @@ impl std::fmt::Display for OrderSide {
 
 #[derive(Clone)]
 pub struct Order {
+    pub symbol: String,
     pub order_id: String,
     pub kind: Option<OrderKind>,
     pub side: Option<OrderSide>,
