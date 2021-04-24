@@ -49,20 +49,16 @@ impl User {
     async fn refresh_balance(&mut self) -> Result<()> {
         Ok(self.balance = self.exchange.get_balance().await?)
     }
-    pub async fn _refresh(&mut self) -> Result<()> {
-        self.refresh_exchange_connection().await;
-        self.refresh_balance().await?;
-        self.remove_dead();
-        Ok(())
-    }
     pub async fn refresh(&mut self) {
-        match self._refresh().await {
+        self.refresh_exchange_connection().await;
+        match self.refresh_balance().await {
             Err(e) => {
                 println!("{}", e);
                 self.lower_health(1);
             }
             _ => {}
         }
+        self.remove_dead();
     }
     fn lower_health(&mut self, amount: i8) {
         self.health -= amount;
