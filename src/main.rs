@@ -36,7 +36,7 @@ async fn main() {
             let tokens = maybe_tokens.unwrap();
             {
                 let mut um = user_manager_ref2.lock().await;
-                um.execute_arbitrage(tokens).await;
+                um.purchase_and_take_profit(tokens).await;
             }
         }
     });

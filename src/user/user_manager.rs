@@ -40,7 +40,7 @@ impl UserManager {
         }
         should_continue
     }
-    pub async fn execute_arbitrage(&mut self, symbols: Vec<String>) {
+    pub async fn purchase_and_take_profit(&mut self, symbols: Vec<String>) {
         self.buy_tokens(symbols.clone()).await;
         while !self.resolve_place_sell_order(&symbols).await {
             tokio::time::sleep(tokio::time::Duration::from_millis(50)).await;
