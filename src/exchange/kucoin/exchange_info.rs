@@ -1,30 +1,37 @@
 use std::collections::HashMap;
-use std::fmt::Formatter;
 
 use anyhow::{Context, Result};
 use kucoin_rs::kucoin::client::{Kucoin, KucoinEnv};
 use kucoin_rs::kucoin::model::market::SymbolList;
-
+use serde::{Serialize, Deserialize};
 use crate::error::error::MintError;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct KucoinPrecisionInfo {
-    pub(crate) quantity_precision: f64,
-    pub(crate) price_precision: f64,
+    pub(crate) base_sig_digs: i8,
+    pub(crate) price_sig_digs: i8
 }
 
-impl std::fmt::Display for KucoinPrecisionInfo {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{{\"base\":{},\"quote\";{}}}", self.quantity_precision, self.price_precision)
+pub fn num_sig_digits(float_str: String) -> i8 {
+    let char_vec: Vec<char> = float_str.chars().collect();
+    let mut is_decimal_seen = false;
+    let mut num_sig_digits: i8 = 0;
+    for c in char_vec {
+        if c == '.' {
+            is_decimal_seen = true;
+        } else if is_decimal_seen {
+            num_sig_digits += 1;
+        }
     }
+    num_sig_digits
 }
 
 pub fn get_one_symbol_info_kc(symbol_info: &SymbolList) -> Result<KucoinPrecisionInfo> {
-    let quantity_precision: f64 = symbol_info.base_increment.parse()?;
-    let price_precision: f64 = symbol_info.quote_increment.parse()?;
+    let base_sig_digs: i8 = num_sig_digits(symbol_info.base_increment.clone());
+    let price_sig_digs: i8 = num_sig_digits(symbol_info.price_increment.clone());
     Ok(KucoinPrecisionInfo {
-        quantity_precision,
-        price_precision,
+        price_sig_digs,
+        base_sig_digs
     })
 }
 

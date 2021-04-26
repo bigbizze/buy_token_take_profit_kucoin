@@ -4,6 +4,7 @@ use tokio::sync::Mutex;
 
 use crate::http_server::http_server::tide_server;
 use crate::user::user_manager::UserManager;
+use exchange::kucoin::token_info::make_token_info_vec;
 
 mod http_server;
 mod exchange;
@@ -30,11 +31,8 @@ async fn main() {
     tokio::spawn(async move {
         loop {
             let maybe_tokens = token.recv().await.ok_or_else(|| println!("Failed attempting to receive tokens from server!")).ok();
-            if let None = maybe_tokens {
-                continue;
-            }
-            let tokens = maybe_tokens.unwrap();
-            {
+            if let Some(tokens) = maybe_tokens {
+                let tokens = make_token_info_vec(tokens);
                 let mut um = user_manager_ref2.lock().await;
                 um.purchase_and_take_profit(tokens).await;
             }

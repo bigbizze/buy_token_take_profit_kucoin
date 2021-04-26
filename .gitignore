@@ -1,3 +1,4 @@
 /target
-settings.json
+src/settings.json
 .env
+src/temp.json

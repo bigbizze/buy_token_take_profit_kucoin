@@ -1,6 +1,6 @@
-use std::fs;
-
 use serde::{Deserialize, Serialize};
+
+static SETTINGS_JSON: &'static str = include_str!("../settings.json");
 
 #[derive(Serialize, Deserialize, Clone)]
 pub struct ApiCredentials {
@@ -11,6 +11,6 @@ pub struct ApiCredentials {
 }
 
 pub fn load_api_credentials() -> Vec<ApiCredentials> {
-    let file_str = fs::read_to_string("../../settings.json").expect("No settings.json file found!");
-    serde_json::from_str::<Vec<ApiCredentials>>(&file_str).expect("Unable to deserialize settings.json!")
+    // let file_str = fs::read_to_string("../settings.json").expect("No settings.json file found!");
+    serde_json::from_str::<Vec<ApiCredentials>>(&SETTINGS_JSON).expect("Unable to deserialize settings.json!")
 }
