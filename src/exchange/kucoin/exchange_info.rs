@@ -1,8 +1,8 @@
 use std::collections::HashMap;
 
 use anyhow::{Context, Result};
-use kucoin_rs::kucoin::client::{Kucoin, KucoinEnv};
-use kucoin_rs::kucoin::model::market::SymbolList;
+use kucoin_rs_custom::kucoin::client::{Kucoin, KucoinEnv};
+use kucoin_rs_custom::kucoin::model::market::SymbolList;
 use serde::{Serialize, Deserialize};
 use crate::error::error::MintError;
 

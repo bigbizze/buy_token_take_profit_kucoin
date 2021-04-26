@@ -1,7 +1,7 @@
 use crate::error::error::other_err::{KucoinApiError, KucoinClientError, KucoinErrorKind, MiscError};
 
 pub mod other_err {
-    use kucoin_rs::kucoin::error::APIError;
+    use kucoin_rs_custom::kucoin::error::APIError;
 
     #[derive(thiserror::Error, Debug)]
     #[error("{:?}", msg)]
@@ -23,7 +23,7 @@ pub mod other_err {
 
     #[derive(Debug)]
     pub struct KucoinApiError {
-        e: kucoin_rs::kucoin::error::APIError
+        e: kucoin_rs_custom::kucoin::error::APIError
     }
 
     impl std::fmt::Display for KucoinApiError {
@@ -48,7 +48,7 @@ pub mod other_err {
 
     #[derive(Debug)]
     pub struct KucoinClientError {
-        e: kucoin_rs::failure::Error
+        e: kucoin_rs_custom::failure::Error
     }
 
     impl std::fmt::Display for KucoinClientError {
@@ -59,15 +59,15 @@ pub mod other_err {
 
     impl std::error::Error for KucoinClientError {}
 
-    impl From<kucoin_rs::failure::Error> for KucoinClientError {
-        fn from(e: kucoin_rs::failure::Error) -> Self {
+    impl From<kucoin_rs_custom::failure::Error> for KucoinClientError {
+        fn from(e: kucoin_rs_custom::failure::Error) -> Self {
             KucoinClientError { e }
         }
     }
 
     pub enum KucoinErrorKind {
         Api(APIError),
-        Client(kucoin_rs::failure::Error),
+        Client(kucoin_rs_custom::failure::Error),
     }
 
     impl Into<KucoinErrorKind> for APIError {
@@ -76,7 +76,7 @@ pub mod other_err {
         }
     }
 
-    impl Into<KucoinErrorKind> for kucoin_rs::failure::Error {
+    impl Into<KucoinErrorKind> for kucoin_rs_custom::failure::Error {
         fn into(self) -> KucoinErrorKind {
             KucoinErrorKind::Client(self)
         }

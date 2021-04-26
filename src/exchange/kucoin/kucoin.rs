@@ -1,9 +1,9 @@
 use std::collections::HashMap;
 
 use anyhow::{Context, Result};
-use kucoin_rs::kucoin::client::{Credentials, Kucoin, KucoinEnv};
-use kucoin_rs::kucoin::model::APIDatum;
-use kucoin_rs::kucoin::model::user::AccountType;
+use kucoin_rs_custom::kucoin::client::{Credentials, Kucoin, KucoinEnv};
+use kucoin_rs_custom::kucoin::model::APIDatum;
+use kucoin_rs_custom::kucoin::model::user::AccountType;
 
 use crate::error::error::MintError;
 use crate::exchange::an_exchange::AnExchange;
